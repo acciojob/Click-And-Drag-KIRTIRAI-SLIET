@@ -7,25 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
 	let offsetX = 0;
 	let offsetY = 0;
 
-	cubes.forEach(cube => {
-		cube.addEventListener("mousedown", (e) => {
-			active = cube;
+	cube.addEventListener("mousedown", (e) => {
+	active = cube;
 
-			// Convert to absolute ONLY when dragging starts
-			const rect = cube.getBoundingClientRect();
-			const containerRect = container.getBoundingClientRect();
+	const rect = cube.getBoundingClientRect();
+	const containerRect = container.getBoundingClientRect();
 
-			offsetX = e.clientX - rect.left;
-			offsetY = e.clientY - rect.top;
+	offsetX = e.clientX - rect.left;
+	offsetY = e.clientY - rect.top;
 
-			cube.style.position = "absolute";
-			cube.style.left = rect.left - containerRect.left + "px";
-			cube.style.top = rect.top - containerRect.top + "px";
-			cube.style.margin = "0"; // prevent shift
+	cube.style.position = "absolute";
+	cube.style.left = rect.left - containerRect.left + "px";
+	cube.style.top = rect.top - containerRect.top + "px";
+	cube.style.margin = "0";
 
-			cube.style.cursor = "grabbing";
-		});
-	});
+	// 🔴 IMPORTANT: trigger initial movement
+	moveAt(e);
+
+	cube.style.cursor = "grabbing";
+});
 
 	document.addEventListener("mousemove", (e) => {
 		if (!active) return;
