@@ -42,7 +42,7 @@ let isDown = false;
 let startX;
 let scrollLeft;
 
-const getX = (e) => e.pageX || e.clientX; // 🔴 KEY FIX
+const getX = (e) => e.pageX || e.clientX;
 
 slider.addEventListener('mousedown', (e) => {
 	isDown = true;
@@ -50,16 +50,6 @@ slider.addEventListener('mousedown', (e) => {
 
 	startX = getX(e);
 	scrollLeft = slider.scrollLeft;
-});
-
-slider.addEventListener('mouseleave', () => {
-	isDown = false;
-	slider.classList.remove('active');
-});
-
-slider.addEventListener('mouseup', () => {
-	isDown = false;
-	slider.classList.remove('active');
 });
 
 slider.addEventListener('mousemove', (e) => {
@@ -71,6 +61,16 @@ slider.addEventListener('mousemove', (e) => {
 	const walk = (x - startX) * 2;
 
 	slider.scrollLeft = scrollLeft - walk;
+});
+
+slider.addEventListener('mouseup', () => {
+	isDown = false;
+	slider.classList.remove('active');
+});
+
+slider.addEventListener('mouseleave', () => {
+	isDown = false;
+	slider.classList.remove('active');
 });
 </script>
 
