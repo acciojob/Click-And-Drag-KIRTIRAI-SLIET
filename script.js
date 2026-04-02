@@ -7,6 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	let offsetX = 0;
 	let offsetY = 0;
 
+	function moveAt(e) {
+		const containerRect = container.getBoundingClientRect();
+	
+		let x = e.clientX - containerRect.left - offsetX;
+		let y = e.clientY - containerRect.top - offsetY;
+	
+		x = Math.max(0, Math.min(x, container.clientWidth - active.offsetWidth));
+		y = Math.max(0, Math.min(y, container.clientHeight - active.offsetHeight));
+	
+		active.style.left = x + "px";
+		active.style.top = y + "px";
+	}
+	
 	cube.addEventListener("mousedown", (e) => {
 	active = cube;
 
@@ -21,26 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	cube.style.top = rect.top - containerRect.top + "px";
 	cube.style.margin = "0";
 
-	// 🔴 IMPORTANT: trigger initial movement
 	moveAt(e);
 
 	cube.style.cursor = "grabbing";
-});
+    });
 
 	document.addEventListener("mousemove", (e) => {
 		if (!active) return;
-
-		const containerRect = container.getBoundingClientRect();
-
-		let x = e.clientX - containerRect.left - offsetX;
-		let y = e.clientY - containerRect.top - offsetY;
-
-		// 🔒 Boundaries
-		x = Math.max(0, Math.min(x, container.clientWidth - active.offsetWidth));
-		y = Math.max(0, Math.min(y, container.clientHeight - active.offsetHeight));
-
-		active.style.left = x + "px";
-		active.style.top = y + "px";
+		moveAt(e);
 	});
 
 	document.addEventListener("mouseup", () => {
