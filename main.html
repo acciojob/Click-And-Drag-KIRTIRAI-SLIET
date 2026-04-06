@@ -35,40 +35,56 @@
 		</div>
 	
 		<script>
-		//Your code goes here 
-		const slider = document.querySelector('.items');
+		//Your code goes here
+const container = document.querySelector('.container');
 
-let isDown = false;
-let startX = 0;
-let scrollLeft = 0;
+let activeCube = null;
+let offsetX = 0;
+let offsetY = 0;
 
-const getX = (e) => e.pageX || e.clientX || 0;
+container.addEventListener('mousedown', (e) => {
+    if (!e.target.classList.contains('cube')) return;
 
-slider.addEventListener('mousedown', (e) => {
-	isDown = true;
-	startX = getX(e);
-	scrollLeft = slider.scrollLeft;
+    activeCube = e.target;
+
+    const rect = activeCube.getBoundingClientRect();
+
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    // Convert to absolute positioning
+    activeCube.style.position = 'absolute';
+    activeCube.style.zIndex = 1000;
+
+    moveAt(e.pageX, e.pageY);
 });
 
-slider.addEventListener('mousemove', (e) => {
-	// 🔴 IMPORTANT: Cypress sometimes skips proper state
-	if (!isDown && e.buttons !== 1) return;
-
-	const x = getX(e);
-	const walk = (x - startX);
-
-	// 🔴 FORCE scroll change (no multiplier issues)
-	slider.scrollLeft = scrollLeft - walk;
+document.addEventListener('mousemove', (e) => {
+    if (!activeCube) return;
+    moveAt(e.pageX, e.pageY);
 });
 
-slider.addEventListener('mouseup', () => {
-	isDown = false;
+document.addEventListener('mouseup', () => {
+    activeCube = null;
 });
 
-slider.addEventListener('mouseleave', () => {
-	isDown = false;
-});
+function moveAt(pageX, pageY) {
+    const containerRect = container.getBoundingClientRect();
+
+    let newLeft = pageX - containerRect.left - offsetX;
+    let newTop = pageY - containerRect.top - offsetY;
+
+    // Boundary constraints
+    const maxLeft = container.clientWidth - activeCube.offsetWidth;
+    const maxTop = container.clientHeight - activeCube.offsetHeight;
+
+    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    newTop = Math.max(0, Math.min(newTop, maxTop));
+
+    activeCube.style.left = newLeft + 'px';
+    activeCube.style.top = newTop + 'px';
+}
 		</script>
-	
 	</body>
 </html>
+
