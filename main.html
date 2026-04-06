@@ -36,54 +36,37 @@
 	
 		<script>
 		//Your code goes here
-const container = document.querySelector('.items');
+	document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.querySelector('.items');
+    if (!slider) return;
 
-let activeCube = null;
-let offsetX = 0;
-let offsetY = 0;
+    let isDown = false;
+    let startX;
+    let scrollLeft;
 
-container.addEventListener('mousedown', (e) => {
-    if (!e.target.classList.contains('item')) return;
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
 
-    activeCube = e.target;
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
 
-    const rect = activeCube.getBoundingClientRect();
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+    });
 
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
 
-    // Convert to absolute positioning
-    activeCube.style.position = 'absolute';
-    activeCube.style.zIndex = 1000;
-
-    moveAt(e.pageX, e.pageY);
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX); // drag distance
+        slider.scrollLeft = scrollLeft - walk;
+    });
 });
-
-document.addEventListener('mousemove', (e) => {
-    if (!activeCube) return;
-    moveAt(e.pageX, e.pageY);
-});
-
-document.addEventListener('mouseup', () => {
-    activeCube = null;
-});
-
-function moveAt(pageX, pageY) {
-    const containerRect = container.getBoundingClientRect();
-
-    let newLeft = pageX - containerRect.left - offsetX;
-    let newTop = pageY - containerRect.top - offsetY;
-
-    // Boundary constraints
-    const maxLeft = container.clientWidth - activeCube.offsetWidth;
-    const maxTop = container.clientHeight - activeCube.offsetHeight;
-
-    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-    newTop = Math.max(0, Math.min(newTop, maxTop));
-
-    activeCube.style.left = newLeft + 'px';
-    activeCube.style.top = newTop + 'px';
-}
 		</script>
 	</body>
 </html>
